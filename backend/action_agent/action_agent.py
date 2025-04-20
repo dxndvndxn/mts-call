@@ -1,13 +1,13 @@
 import requests
 
 
-def reasoning_step_one(chat, intent, emotion):
+def reasoning_step_one(chat, intent, emotion, knowlege):
     intent_query = intent['query']
     intent_precision = intent['precision']
     emotion_emotion = emotion['emotion']
     emotion_cause = emotion['cause']
 
-    system = {"role": "system", "content": f"Ты виртуальный ассистент оператора колл-центра компании сотовой связи. В фирме много различных услуг, тарифов, подписок, сервисов. Твоя задача - написать идеальный ответ клиенту, учитывая историю чата и сопутствующую информацию от предыдущих агентов. Намерение клиента: {intent_query}. Трубется ли уточнение по запросу клиента: {intent_precision}. Эмоция клиента сейчас: {emotion_emotion}. Причина эмоции клиента: {emotion_cause}."}
+    system = {"role": "system", "content": f"Ты виртуальный ассистент оператора колл-центра компании сотовой связи. В фирме много различных услуг, тарифов, подписок, сервисов. Твоя задача - написать идеальный ответ клиенту, учитывая историю чата и сопутствующую информацию от предыдущих агентов. Намерение клиента: {intent_query}. Трубется ли уточнение по запросу клиента: {intent_precision}. Эмоция клиента сейчас: {emotion_emotion}. Причина эмоции клиента: {emotion_cause}. На тему запроса клиента в базе знаний нашлась следующая информация: {knowlege}. Учитывай её при построении ответа."}
 
     headers = {
         'Authorization': 'Bearer sk-KNo006G2a48UVE3IxFlQEQ'
@@ -38,8 +38,8 @@ def reasoning_step_one(chat, intent, emotion):
         return "Запрос не распознан"
 
 
-def action_agent(chat, intent, emotion):
-    rs_1 = reasoning_step_one(chat, intent, emotion)
+def action_agent(chat, intent, emotion, knowlege):
+    rs_1 = reasoning_step_one(chat, intent, emotion, knowlege)
 
     return {
         'answer': rs_1
