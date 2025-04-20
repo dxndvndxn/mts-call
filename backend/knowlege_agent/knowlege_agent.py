@@ -59,7 +59,7 @@ def reasoning_step_two(query):
         response.raise_for_status()
         resp = response.json()
         print("Knowlege Agent, вектор: ", resp['choices'][0]['message']['content'])
-        embedding = resp['choices'][0]['embedding']
+        embedding = resp['data'][0]['embedding']
 
         hits_names = client.query_points(
             collection_name="names",
