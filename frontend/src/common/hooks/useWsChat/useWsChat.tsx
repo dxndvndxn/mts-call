@@ -37,7 +37,9 @@ export const useWsChat = <T,>({ role }: UseWsChatProps) => {
   const [messages, setMessages] = useState<BubbleDataType[]>([]);
 
   useEffect(() => {
-    const newChat = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${role}`);
+    const newChat = new WebSocket(
+      `ws://${process.env.REACT_APP_API_BASE_URL}/ws/chat/${role}`,
+    );
 
     newChat.onopen = () => {
       setSocket(newChat);

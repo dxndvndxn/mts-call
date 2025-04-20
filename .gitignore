@@ -4,3 +4,6 @@
 /backend/.venv
 /backend/db.csv
 /backend/qdrant_storage
+
+/frontend/.env
+/frontend/.env.production
