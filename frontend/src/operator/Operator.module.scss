@@ -1,0 +1,15 @@
+.chat {
+  min-width: 600px;
+  height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+}
+
+.newDialog {
+  background-color: #C678DD;
+}
+
+.closeDialog {
+  background-color: #6E95DD;
+}

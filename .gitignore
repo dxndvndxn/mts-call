@@ -1,0 +1,6 @@
+.idea
+/frontend/node_modules
+/backend/.idea
+/backend/.venv
+/backend/db.csv
+/backend/qdrant_storage

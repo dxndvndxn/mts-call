@@ -1,0 +1,13 @@
+.side {
+  height: calc(100vh - var(--paddingBase) * 2);
+  min-width: 380px;
+}
+
+.layout {
+  padding: var(--paddingBase);
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+}
