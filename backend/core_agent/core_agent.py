@@ -9,7 +9,7 @@ def core_agent(chat):
     emotion = emotional_agent.emotional_agent(chat)
     knowlege = knowlege_agent.knowlege_agent(chat, intent)
     action = action_agent.action_agent(chat, intent, emotion, knowlege)
-    quality = quality_agent.quality_agent(chat, intent, emotion, action)
+    quality = quality_agent.quality_agent(chat, intent, emotion, action, knowlege)
 
     return {
         'action': quality,

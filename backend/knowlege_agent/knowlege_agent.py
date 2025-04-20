@@ -58,7 +58,6 @@ def reasoning_step_two(query):
         response = requests.post('https://api.gpt.mws.ru/v1/embeddings', json=payload, headers=headers)
         response.raise_for_status()
         resp = response.json()
-        print("Knowlege Agent, вектор: ", resp['choices'][0]['message']['content'])
         embedding = resp['data'][0]['embedding']
 
         hits_names = client.query_points(
@@ -68,7 +67,21 @@ def reasoning_step_two(query):
         ).points
 
         answer_by_name = hits_names[0].payload['content']
-        return answer_by_name
+        print("Knowlege Agent, найдено в базе знаний по названию статьи: ", answer_by_name)
+
+        hits_content = client.query_points(
+            collection_name="content",
+            query=embedding,
+            limit=1,
+        ).points
+
+        answer_by_content = hits_content[0].payload['content']
+        print("Knowlege Agent, найдено в базе знаний по содержанию статьи: ", answer_by_content)
+
+        if not (answer_by_name == answer_by_content):
+            return f"{answer_by_name} \n  {answer_by_content}"
+        else:
+            return answer_by_name
 
     except requests.exceptions.RequestException as e:
         print("Ошибка при выполнении запроса:", e)
