@@ -1,5 +1,7 @@
 import requests
+import logging
 
+logger = logging.getLogger("uvicorn.error")
 
 def reasoning_step_one(chat):
     system = {
@@ -30,9 +32,11 @@ def reasoning_step_one(chat):
         response.raise_for_status()
         resp = response.json()
         print("Intent Agent, проверка полноты запроса: ", resp['choices'][0]['message']['content'])
+        logger.info("Intent Agent, проверка полноты запроса: ", resp['choices'][0]['message']['content'])
         return resp['choices'][0]['message']['content']
     except requests.exceptions.RequestException as e:
         print("Ошибка при выполнении запроса:", e)
+        logger.info("Ошибка при выполнении запроса:", e)
         return "Запрос не распознан"
 def reasoning_step_two(chat):
     system = {
@@ -62,10 +66,12 @@ def reasoning_step_two(chat):
         response.raise_for_status()
         resp = response.json()
         print("Intent Agent, классификация запроса клиента: ", resp['choices'][0]['message']['content'])
+        logger.info("Intent Agent, классификация запроса клиента: ", resp['choices'][0]['message']['content'])
 
         return resp['choices'][0]['message']['content']
     except requests.exceptions.RequestException as e:
         print("Ошибка при выполнении запроса:", e)
+        logger.info("Ошибка при выполнении запроса:", e)
         return "Запрос не распознан"
 
 def intent_agent(chat):

@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from chat_ws import chat_ws
+import logging
+from fastapi.logger import logger as fastapi_logger
+
 app = FastAPI()
 
 origins = [
@@ -16,5 +19,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+gunicorn_logger = logging.getLogger("gunicorn.error")
+fastapi_logger.handlers = gunicorn_logger.handlers
+fastapi_logger.setLevel(gunicorn_logger.level)
 
 app.websocket("/ws/chat/{username}")(chat_ws.chat_ws)

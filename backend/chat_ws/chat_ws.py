@@ -1,6 +1,10 @@
 import json
 from fastapi import WebSocket
 from core_agent import core_agent
+import logging
+
+logger = logging.getLogger("uvicorn.error")
+
 # Список подключенных клиентов
 connected_clients = []
 
@@ -9,6 +13,8 @@ message_queue = []
 
 async def chat_ws(websocket: WebSocket, username):
     await websocket.accept()
+    logger.info(username)
+
     connected_client = {
         "websocket": websocket,
         "username": username
@@ -38,6 +44,8 @@ async def chat_ws(websocket: WebSocket, username):
                 # Добавляем сообщение в очередь
                 message_queue.append(message_data)
 
+                logger.info(message_data)
+
                 # Отправляем сообщение всем подключенным клиентам
                 for client in connected_clients:
                     await client["websocket"].send_text(json.dumps(message_data))
@@ -54,5 +62,5 @@ async def chat_ws(websocket: WebSocket, username):
                         if client['username'] == 'operator':
                             await client["websocket"].send_text(json.dumps(response))
     except Exception as e:
-        print('chat_ws: ', e)
+        logger.info('chat_ws: ', e)
         connected_clients.remove(connected_client)

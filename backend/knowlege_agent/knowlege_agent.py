@@ -1,11 +1,6 @@
 import requests
 from qdrant_client import QdrantClient, models
 
-
-client = QdrantClient(url="http://localhost:6333")
-
-
-
 def reasoning_step_one(chat, intent):
 
     intent_query = intent['query']
@@ -60,6 +55,8 @@ def reasoning_step_two(query):
         resp = response.json()
         print("Knowlege Agent, вектор: ", resp['data'][0]['embedding'])
         embedding = resp['data'][0]['embedding']
+        print('embedding', embedding[0])
+        client = QdrantClient(url="http://localhost:6333")
 
         hits_names = client.query_points(
             collection_name="names",

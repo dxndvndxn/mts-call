@@ -1,5 +1,7 @@
 import requests
+import logging
 
+logger = logging.getLogger("uvicorn.error")
 
 def reasoning_step_one(chat):
     system = {
@@ -31,9 +33,11 @@ def reasoning_step_one(chat):
         response.raise_for_status()
         resp = response.json()
         print("Emotion Agent, распознание эмоции: ", resp['choices'][0]['message']['content'])
+        logger.info("Emotion Agent, распознание эмоции: ", resp['choices'][0]['message']['content'])
         return resp['choices'][0]['message']['content']
     except requests.exceptions.RequestException as e:
         print("Ошибка при выполнении запроса:", e)
+        logger.info("Ошибка при выполнении запроса:", e)
         return "Запрос не распознан"
 
 def reasoning_step_two(chat, rs_1):
@@ -62,10 +66,10 @@ def reasoning_step_two(chat, rs_1):
         response = requests.post('https://api.gpt.mws.ru/v1/chat/completions', json=payload, headers=headers)
         response.raise_for_status()
         resp = response.json()
-        print("Emotion Agent, причина эмоции: ", resp['choices'][0]['message']['content'])
+        logger.info("Emotion Agent, причина эмоции: ", resp['choices'][0]['message']['content'])
         return resp['choices'][0]['message']['content']
     except requests.exceptions.RequestException as e:
-        print("Ошибка при выполнении запроса:", e)
+        logger.info("Ошибка при выполнении запроса:", e)
         return "Запрос не распознан"
 
 def emotional_agent(chat):
