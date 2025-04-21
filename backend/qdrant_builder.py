@@ -3,7 +3,7 @@ import ast
 import pandas as pd
 
 
-client = QdrantClient(url="http://localhost:6333")
+client = QdrantClient(host="qdrant", port=6333)
 
 data = pd.read_csv('db.csv')
 documents = data.to_dict(orient='records')

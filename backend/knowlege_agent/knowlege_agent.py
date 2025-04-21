@@ -1,5 +1,6 @@
 import requests
 from qdrant_client import QdrantClient, models
+from qdrant_client.http.exceptions import UnexpectedResponse
 
 def reasoning_step_one(chat, intent):
 
@@ -56,13 +57,22 @@ def reasoning_step_two(query):
         print("Knowlege Agent, вектор: ", resp['data'][0]['embedding'])
         embedding = resp['data'][0]['embedding']
         print('embedding', embedding[0])
-        client = QdrantClient(url="http://localhost:6333")
+        client = QdrantClient(host="qdrant", port=6333)
 
-        hits_names = client.query_points(
-            collection_name="names",
-            query=embedding,
-            limit=1,
-        ).points
+        # Проверка существования коллекции
+        collections = client.get_collections()
+        if "names" not in [col.name for col in collections.collections]:
+            print("Коллекция 'names' не найдена!")
+        try:
+            hits_names = client.query_points(
+                collection_name="names",
+                query=embedding,
+                limit=1,
+            ).points
+        except UnexpectedResponse as e:
+            print(f"Ошибка Qdrant: {e.status_code} - {e.content}")
+        except Exception as e:
+            print(f"Общая ошибка: {str(e)}")
 
         answer_by_name = hits_names[0].payload['content']
         print("Knowlege Agent, найдено в базе знаний по названию статьи: ", answer_by_name)
