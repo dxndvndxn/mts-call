@@ -3,10 +3,12 @@ FROM node:21.7.3-alpine as build
 WORKDIR /app
 
 # Копируем package.json и package-lock.json
-COPY ./frontend/package*.json ./
-RUN npm install
+#COPY ./frontend/package*.json ./
 
 COPY ./frontend ./
+
+RUN npm install
+
 RUN npm run build
 
 # Финальный образ для запуска

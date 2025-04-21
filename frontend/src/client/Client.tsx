@@ -4,11 +4,13 @@ import { Bubble, Sender } from "@ant-design/x";
 import { useWsChat } from "../common/hooks";
 
 import styles from "./Client.module.scss";
+const role = "user";
 
 export const Client = () => {
-  const { socket, roles, content, setContent, messages } = useWsChat({
-    role: "user",
-  });
+  const { socket, roles, content, setContent, messages, setMessages } =
+    useWsChat({
+      role,
+    });
 
   return (
     <Layout>

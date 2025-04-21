@@ -13,21 +13,46 @@ export interface EmotionAgent {
 
 export interface ActionAgent {
   answer?: string;
+  quality?: string;
+}
+
+export interface SummaryAgent {
+  type?: string;
+  final?: string;
 }
 
 export interface OperatorData {
   operator?: {
     emotion?: EmotionAgent;
     action?: ActionAgent;
+    summary?: SummaryAgent;
+    knowledge?: string;
   };
 }
 
 export const Operator = () => {
-  const { messages, content, setContent, socket, roles, webSocketData } =
-    useWsChat<OperatorData>({
-      role: "operator",
-    });
-  const { emotion = {}, action = {} } = webSocketData.operator || {};
+  const {
+    messages,
+    content,
+    setContent,
+    socket,
+    roles,
+    webSocketData,
+    setWebSocketData,
+    setMessages,
+  } = useWsChat<OperatorData>({
+    role: "operator",
+  });
+  const {
+    emotion = {},
+    action = {},
+    knowledge,
+    summary,
+  } = webSocketData.operator || {};
+
+  const clearDialog = () => {
+    socket?.send("clearDialog");
+  };
 
   useEffect(() => {
     if (action.answer) {
@@ -36,7 +61,10 @@ export const Operator = () => {
   }, [action]);
 
   return (
-    <Layout left={<Knowledge />} right={<Agents {...emotion} />}>
+    <Layout
+      left={<Knowledge text={knowledge} />}
+      right={<Agents {...emotion} {...action} {...summary} />}
+    >
       <Flex vertical gap="middle" className={styles.chat}>
         <Bubble.List roles={roles} items={messages} />
         <Sender
@@ -51,12 +79,13 @@ export const Operator = () => {
             setContent("");
           }}
         />
-        <Flex justify="space-between" align="center">
-          <Button type="default" className={styles.closeDialog}>
+        <Flex justify="end" align="center">
+          <Button
+            type="primary"
+            className={styles.newDialog}
+            onClick={clearDialog}
+          >
             Закончить диалог
-          </Button>
-          <Button type="primary" className={styles.newDialog}>
-            Синтезировать новый диалог
           </Button>
         </Flex>
       </Flex>

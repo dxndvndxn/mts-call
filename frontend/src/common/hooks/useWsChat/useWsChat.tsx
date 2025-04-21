@@ -9,6 +9,7 @@ type UserType = "user" | "operator";
 type WsResponse = {
   role?: string;
   content?: string;
+  clearDialog?: boolean;
 };
 
 interface UseWsChatProps {
@@ -47,10 +48,15 @@ export const useWsChat = <T,>({ role }: UseWsChatProps) => {
 
     newChat.onmessage = (event) => {
       if (event.data) {
-        const { role, content, ...restData } =
+        const { role, content, clearDialog, ...restData } =
           (JSON.parse(event.data) as WsResponse) || {};
 
-        console.log("event.data", event.data);
+        if (clearDialog) {
+          setWebSocketData({} as T);
+          setContent("");
+          setMessages([]);
+          return;
+        }
 
         if (role && content) {
           setMessages((messages) => {
@@ -81,5 +87,14 @@ export const useWsChat = <T,>({ role }: UseWsChatProps) => {
     };
   }, []);
 
-  return { messages, content, setContent, socket, roles, webSocketData };
+  return {
+    messages,
+    content,
+    setContent,
+    setMessages,
+    socket,
+    roles,
+    webSocketData,
+    setWebSocketData,
+  };
 };

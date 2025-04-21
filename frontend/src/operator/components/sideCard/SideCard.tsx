@@ -5,7 +5,7 @@ import styles from "./SideCard.module.scss";
 
 interface SideCardProps {
   title: string;
-  text?: string;
+  text?: string | React.JSX.Element;
   action?: () => void;
 }
 

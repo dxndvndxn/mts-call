@@ -1,6 +1,7 @@
 .side {
   height: calc(100vh - var(--paddingBase) * 2);
   min-width: 380px;
+  overflow-y: scroll;
 }
 
 .layout {

@@ -58,6 +58,7 @@ def reasoning_step_two(query):
         response = requests.post('https://api.gpt.mws.ru/v1/embeddings', json=payload, headers=headers)
         response.raise_for_status()
         resp = response.json()
+        print("Knowlege Agent, вектор: ", resp['data'][0]['embedding'])
         embedding = resp['data'][0]['embedding']
 
         hits_names = client.query_points(
